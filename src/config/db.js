@@ -8,7 +8,7 @@ const DB = process.env.DATABASE.replace(
 );
 
 const dbConnection = () => {
-  mongoose.connect(LOCALDB || DB).then((conn) => {
+  mongoose.connect(DB || LOCALDB).then((conn) => {
     userModel.findOne({ email: process.env.ADMIN_EMAIL }).then((admin) => {
       if (!admin) {
         userModel.create({
