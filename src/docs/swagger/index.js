@@ -1,8 +1,6 @@
 const path = require('path');
 const swaggerJSDoc = require('swagger-jsdoc');
 
-const port = process.env.PORT || 3000;
-
 const options = {
   definition: {
     openapi: '3.0.0',
@@ -13,8 +11,8 @@ const options = {
     },
     servers: [
       {
-        url: `${process.env.BASE_URL || `http://localhost:${port}`}`,
-        description: 'Local development server',
+        url: '/api/v1',
+        description: 'API v1',
       },
     ],
     components: {
@@ -39,12 +37,11 @@ const options = {
           type: 'object',
           properties: {
             _id: { type: 'string', example: '66123456789abcdef012345' },
-            name: { type: 'string', example: 'John Doe' },
-            username: { type: 'string', example: 'johndoe' },
+            name: { type: 'string', example: 'Ali Nour' },
             email: {
               type: 'string',
               format: 'email',
-              example: 'john.doe@example.com',
+              example: 'alymohameedaly@gmail.com',
             },
             role: { type: 'string', example: 'user' },
           },
