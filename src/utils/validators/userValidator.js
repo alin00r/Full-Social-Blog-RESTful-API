@@ -35,6 +35,15 @@ const updateLoggedUserSchema = Joi.object({
   profileImg: Joi.string().optional(),
 });
 
+const changeLoggedUserPasswordSchema = Joi.object({
+  newPassword: Joi.string().min(6).required(),
+});
+
+const activeLoggedUserSchema = Joi.object({
+  email: Joi.string().email().required(),
+  password: Joi.string().min(6).required(),
+});
+
 module.exports = {
   createUserSchema,
   changeUserPasswordSchema,
@@ -42,4 +51,6 @@ module.exports = {
   updateLoggedUserSchema,
   getUserSchema,
   deleteUserSchema,
+  changeLoggedUserPasswordSchema,
+  activeLoggedUserSchema,
 };

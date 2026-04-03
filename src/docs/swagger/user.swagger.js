@@ -17,7 +17,7 @@
  * /users/activeMe:
  *   patch:
  *     summary: Activate a deactivated account
- *     tags: [Users]
+ *     tags: [Public]
  *     description: Public endpoint to reactivate a user account by email.
  *     requestBody:
  *       required: true
@@ -27,11 +27,16 @@
  *             type: object
  *             required:
  *               - email
+ *               - password
  *             properties:
  *               email:
  *                 type: string
  *                 format: email
  *                 example: john.doe@example.com
+ *               password:
+ *                type: string
+ *                format: password
+ *                minLength: 6
  *     responses:
  *       200:
  *         description: Account activated successfully

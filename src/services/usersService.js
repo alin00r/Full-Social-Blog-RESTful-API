@@ -126,13 +126,17 @@ const deleteLoggedUserData = async (req, res, next) => {
 //@route PATCH /api/v1/users/activeMe
 //@access Public
 const activeLoggedUserData = async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (!user || !user.active === false) {
+  const user = await User.findOne({ email: req.body.email }).select(
+    '+password',
+  );
+  if (
+    !user ||
+    !(await user.correctPassword(req.body.password, user.password))
+  ) {
     res.status(204).send();
   }
   user.active = true;
   await user.save();
-  next();
 };
 
 const deleteUserImage = async (userId, imageId) => {

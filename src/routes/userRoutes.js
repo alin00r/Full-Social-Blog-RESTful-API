@@ -10,6 +10,8 @@ const {
   deleteUserSchema,
   getUserSchema,
   updateLoggedUserSchema,
+  activeLoggedUserSchema,
+  changeLoggedUserPasswordSchema,
 } = require('../utils/validators/userValidator');
 const validatorMiddleware = require('../middlewares/validatorMiddleware');
 const {
@@ -33,7 +35,11 @@ const router = express.Router();
 // @desc  Activate logged user account
 // @route PATCH /api/v1/users/activeMe
 // @access Public
-router.patch('/activeMe', activeLoggedUserData);
+router.patch(
+  '/activeMe',
+  validatorMiddleware(activeLoggedUserSchema),
+  activeLoggedUserData,
+);
 
 // Protect all routes after this middleware
 router.use(protect);
@@ -66,7 +72,11 @@ router.patch(
 // @desc  Delete logged user data (soft delete by setting active to false)
 // @route DELETE /api/v1/users/deleteMe
 // @access Private/Protect
-router.delete('/deleteMe', deleteLoggedUserData);
+router.delete(
+  '/deleteMe',
+  validatorMiddleware(changeLoggedUserPasswordSchema),
+  deleteLoggedUserData,
+);
 
 // Admin Routes
 router
