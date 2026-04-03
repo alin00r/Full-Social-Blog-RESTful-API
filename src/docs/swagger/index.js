@@ -59,7 +59,7 @@ const options = {
       },
     },
   },
-  apis: [path.join(__dirname, '*.swagger.js')],
+  apis: [path.join(process.cwd(), 'src/docs/swagger/*.swagger.{js,ts}')],
 };
 
 module.exports = swaggerJSDoc(options);
