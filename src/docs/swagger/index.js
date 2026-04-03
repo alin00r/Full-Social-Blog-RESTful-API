@@ -13,7 +13,7 @@ const options = {
     },
     servers: [
       {
-        url: `http://localhost:${port}/api/v1`,
+        url: `${process.env.BASE_URL || `http://localhost:${port}`}`,
         description: 'Local development server',
       },
     ],
