@@ -49,6 +49,7 @@ const deleteMyPost = async (req, res, next) => {
   if (!post) {
     return next(new AppError(`No post found with id ${req.params.id}`, 404));
   }
+  post.images.forEach((image) => deleteFromImageKit(image.id));
   return post;
 };
 // @desc  Update a post by id
@@ -56,6 +57,11 @@ const deleteMyPost = async (req, res, next) => {
 // @access Private users
 const updateMyPost = async (req, res, next) => {
   const post = await Post.findById(req.params.id);
+  if (post.author.toString() !== req.user.id) {
+    return next(
+      new AppError(`You are not authorized to update this post`, 403),
+    );
+  }
   if (!post) {
     return next(new AppError(`No post found with id ${req.params.id}`, 404));
   }

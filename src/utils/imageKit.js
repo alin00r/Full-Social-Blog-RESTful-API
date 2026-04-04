@@ -1,5 +1,4 @@
 const ImageKit = require('imagekit');
-
 // Initialize ImageKit instance
 const imagekit = new ImageKit({
   publicKey: process.env.IMAGEKIT_PUBLIC_KEY,
@@ -68,7 +67,7 @@ exports.deleteFromImageKit = async (fileId) => {
       return null;
     }
     console.error('Error deleting from ImageKit:', error);
-    throw error;
+    return null;
   }
 };
 

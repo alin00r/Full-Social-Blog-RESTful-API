@@ -17,6 +17,7 @@ dbConnection();
 
 // Middleware
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/swagger-assets', express.static(swaggerUiAsset.getAbsoluteFSPath()));

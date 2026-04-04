@@ -37,22 +37,20 @@ router.use(protect);
 // User routes
 router.post(
   '/',
-  attachPostAuthor,
-  validateRequest(createPostSchema),
   uploadPostImages,
   uploadPostImagesToImageKit,
+  attachPostAuthor,
+  validateRequest(createPostSchema),
   createPost,
 );
 router.get('/', getMyPosts);
-router
-  .route('/:id')
-  .get(getPostById)
-  .patch(
-    validateRequest(updatePostSchema),
-    uploadPostImages,
-    uploadPostImagesToImageKit,
-    updateMyPost,
-  );
+router.route('/:id').get(getPostById).patch(
+  uploadPostImages,
+  uploadPostImagesToImageKit,
+  validateRequest(updatePostSchema),
+
+  updateMyPost,
+);
 router.delete('/:id', validateRequest(deletePostSchema), deleteMyPost);
 
 // Admin routes
