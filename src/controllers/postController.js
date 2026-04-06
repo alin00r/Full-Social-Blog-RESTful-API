@@ -62,7 +62,7 @@ exports.getFeed = catchAsync(async (req, res, next) => {
   res.status(200).json({ data: posts });
 });
 // Admin controllers
-exports.getAllPosts = factory.getAll(Post);
+exports.getAllPosts = factory.getAll(Post, 'Posts');
 exports.createPostByAdmin = factory.createOne(Post);
 exports.getPostByIdAdmin = factory.getOne(Post);
 exports.updatePostByAdmin = factory.updateOne(Post);

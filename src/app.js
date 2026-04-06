@@ -2,6 +2,7 @@ const express = require('express');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const postRoutes = require('./routes/postRoutes');
+const groupRoutes = require('./routes/groupRoutes');
 const dbConnection = require('./config/db');
 const swaggerUI = require('swagger-ui-express');
 const swaggerUiAsset = require('swagger-ui-dist');
@@ -38,6 +39,7 @@ app.use(
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/posts', postRoutes);
+app.use('/api/v1/groups', groupRoutes);
 app.all(/.*/, (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
 });

@@ -260,6 +260,46 @@
  *       - bearerAuth: []
  *       - cookieAuth: []
  *     description: "Allowed roles: super-admin, admin, manager."
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         example: 1
+ *         description: Page number for pagination.
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 10
+ *         example: 10
+ *         description: Number of items per page.
+ *       - in: query
+ *         name: sort
+ *         required: false
+ *         schema:
+ *           type: string
+ *         example: -createdAt
+ *         description: Sort by field. Prefix with - for descending order.
+ *       - in: query
+ *         name: fields
+ *         required: false
+ *         schema:
+ *           type: string
+ *         example: name,email
+ *         description: Comma-separated fields to include.
+ *       - in: query
+ *         name: keyword
+ *         required: false
+ *         schema:
+ *           type: string
+ *         example: ali
+ *         description: Search keyword used against user name.
  *     responses:
  *       200:
  *         description: Users list retrieved successfully
@@ -271,6 +311,8 @@
  *                 results:
  *                   type: integer
  *                   example: 10
+ *                 paginationResult:
+ *                   $ref: '#/components/schemas/PaginationResult'
  *                 data:
  *                   type: array
  *                   items:
