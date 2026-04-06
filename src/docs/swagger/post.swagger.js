@@ -66,6 +66,7 @@
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
+ *     description: If `group` is provided, the user must have write access to that group.
  *     requestBody:
  *       required: true
  *       content:
@@ -205,6 +206,7 @@
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
+ *     description: If the post belongs to a group, the user must still have access to that post and group.
  *     parameters:
  *       - in: path
  *         name: id
@@ -301,6 +303,46 @@
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 1
+ *         example: 1
+ *         description: Page number for pagination.
+ *       - in: query
+ *         name: limit
+ *         required: false
+ *         schema:
+ *           type: integer
+ *           minimum: 1
+ *           default: 10
+ *         example: 10
+ *         description: Number of items per page.
+ *       - in: query
+ *         name: sort
+ *         required: false
+ *         schema:
+ *           type: string
+ *         example: -createdAt
+ *         description: Sort by field. Prefix with - for descending order.
+ *       - in: query
+ *         name: fields
+ *         required: false
+ *         schema:
+ *           type: string
+ *         example: title,author,group
+ *         description: Comma-separated fields to include.
+ *       - in: query
+ *         name: keyword
+ *         required: false
+ *         schema:
+ *           type: string
+ *         example: react
+ *         description: Search keyword used against post title and content.
  *     responses:
  *       200:
  *         description: Posts retrieved successfully
@@ -311,6 +353,8 @@
  *               properties:
  *                 results:
  *                   type: number
+ *                 paginationResult:
+ *                   $ref: '#/components/schemas/PaginationResult'
  *                 data:
  *                   type: array
  *                   items:

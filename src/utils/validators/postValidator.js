@@ -36,15 +36,11 @@ const postValidationSchema = joi.object({
     'string.empty': 'Author is required',
     'any.required': 'Author is required',
   }),
-  group: joi
-    .string()
-    .trim()
-    .empty('')
-    .optional()
-    .messages({
-      'string.base': 'Group must be a string',
-    })
-    .optional(),
+  group: JoiObjectId().optional().allow('').messages({
+    'string.base': 'Group must be a string',
+    'string.hex': 'Group must be a valid ObjectId',
+    'string.length': 'Group must be 24 characters long',
+  }),
   images: postImagesSchema,
 });
 
@@ -54,7 +50,7 @@ const updatePostSchema = postValidationSchema.keys({
   author: joi.string().optional(),
   title: joi.string().optional(),
   content: joi.string().optional(),
-  group: joi.string().trim().empty('').optional(),
+  group: JoiObjectId().optional().allow(''),
   images: postImagesSchema,
 });
 

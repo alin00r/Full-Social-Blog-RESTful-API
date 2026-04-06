@@ -1,15 +1,29 @@
 const Post = require('../models/postModel');
+const Group = require('../models/groupModel');
 const AppError = require('../utils/appError');
-
-const catchAsync = require('../utils/catchAsync');
-const factory = require('./handlersFactory');
-const userServices = require('./usersService');
 const { uploadToImageKit, deleteFromImageKit } = require('../utils/imageKit');
+const { canCreatePostInGroup } = require('./groupService');
 
 // @desc  Create a new post
 // @route POST /api/v1/posts
 // @access Private users
 const createPost = async (req, res, next) => {
+  if (req.body.group) {
+    const group = await Group.findById(req.body.group);
+
+    if (!group) {
+      return next(
+        new AppError(`No group found with id ${req.body.group}`, 404),
+      );
+    }
+
+    if (!canCreatePostInGroup(group, req.user)) {
+      return next(
+        new AppError('You are not allowed to create posts in this group', 403),
+      );
+    }
+  }
+
   const post = await Post.create({
     title: req.body.title,
     content: req.body.content,
@@ -80,8 +94,10 @@ const updateMyPost = async (req, res, next) => {
   return post;
 };
 
+// @desc  Get feed posts (admin posts first, then others)
+// @route GET /api/v1/posts/feed
+// @access Private users
 const getFeed = async (req, res, next) => {
-  // i want to return postes of admin at the top then the rest of the posts sorted by createdAt
   const posts = await Post.find()
     .populate('author', 'name role')
     .sort({ createdAt: -1 })
@@ -90,11 +106,10 @@ const getFeed = async (req, res, next) => {
   const otherPosts = posts.filter((post) => post.author.role !== 'admin');
   return [...adminPosts, ...otherPosts];
 };
-// Upload post images to ImageKit
+// @desc  Upload post images to ImageKit
 const uploadPostImagesToImageKit = async (req, res, next) => {
   req.body = req.body || {};
 
-  // Check if images are provided
   if (!req.files || !req.files.images || req.files.images.length === 0) {
     return next();
   }
