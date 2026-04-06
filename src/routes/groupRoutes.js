@@ -13,6 +13,10 @@ const {
   uploadGroupImage,
   uploadGroupImageToImageKit,
 } = require('../controllers/groupController');
+const {
+  getGroupPosts,
+  getPostByGroup,
+} = require('../controllers/postController');
 const protect = require('../middlewares/protectMiddlware');
 const restrictTo = require('../middlewares/restrictTo');
 const validateRequest = require('../middlewares/validatorMiddleware');
@@ -74,5 +78,11 @@ router.put(
   validateRequest(managePermissionsSchema),
   managePermissions,
 );
+
+// Get all posts in a group
+router.get('/:groupId/posts', protect, getGroupPosts);
+
+// Get specific post by group
+router.get('/:groupId/posts/:postId', protect, getPostByGroup);
 
 module.exports = router;

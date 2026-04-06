@@ -3,6 +3,38 @@ const Group = require('../models/groupModel');
 const AppError = require('../utils/appError');
 const { uploadToImageKit, deleteFromImageKit } = require('../utils/imageKit');
 const { canCreatePostInGroup } = require('./groupService');
+// Helper function to check if user can access the group
+const canReadGroupPosts = (group, user) => {
+  if (!group || !user) {
+    return false;
+  }
+
+  if (user.role === 'super-admin') {
+    return true;
+  }
+
+  if (group.createdBy?.toString() === user._id.toString()) {
+    return true;
+  }
+
+  if (
+    group.admins?.some((adminId) => adminId.toString() === user._id.toString())
+  ) {
+    return true;
+  }
+
+  const memberPermission = group.memberPermissions?.find(
+    (item) => item.user.toString() === user._id.toString(),
+  );
+
+  if (!memberPermission || !Array.isArray(memberPermission.permissions)) {
+    return false;
+  }
+
+  return memberPermission.permissions.some((permission) =>
+    ['read', 'write', 'delete'].includes(permission),
+  );
+};
 
 // @desc  Create a new post
 // @route POST /api/v1/posts
@@ -106,6 +138,61 @@ const getFeed = async (req, res, next) => {
   const otherPosts = posts.filter((post) => post.author.role !== 'admin');
   return [...adminPosts, ...otherPosts];
 };
+
+// @desc  Get all posts in a specific group
+// @route GET /api/v1/groups/:groupId/posts
+// @access Private users
+const getGroupPosts = async (req, res, next) => {
+  const { groupId } = req.params;
+
+  const group = await Group.findById(groupId);
+  if (!group) {
+    return next(new AppError(`No group found with id ${groupId}`, 404));
+  }
+
+  if (!canReadGroupPosts(group, req.user)) {
+    return next(
+      new AppError('You are not allowed to view posts in this group', 403),
+    );
+  }
+
+  const posts = await Post.find({ group: groupId })
+    .populate('author', 'name role')
+    .sort({ createdAt: -1 });
+
+  return posts;
+};
+
+// @desc  Get specific post in a specific group
+// @route GET /api/v1/groups/:groupId/posts/:postId
+// @access Private users
+const getPostByGroup = async (req, res, next) => {
+  const { groupId, postId } = req.params;
+
+  const group = await Group.findById(groupId);
+  if (!group) {
+    return next(new AppError(`No group found with id ${groupId}`, 404));
+  }
+
+  if (!canReadGroupPosts(group, req.user)) {
+    return next(
+      new AppError('You are not allowed to view posts in this group', 403),
+    );
+  }
+
+  const post = await Post.findOne({ _id: postId, group: groupId }).populate(
+    'author',
+    'name role',
+  );
+
+  if (!post) {
+    return next(
+      new AppError(`No post found with id ${postId} in this group`, 404),
+    );
+  }
+
+  return post;
+};
 // @desc  Upload post images to ImageKit
 const uploadPostImagesToImageKit = async (req, res, next) => {
   req.body = req.body || {};
@@ -147,4 +234,6 @@ module.exports = {
   updateMyPost,
   uploadPostImagesToImageKit,
   getFeed,
+  getGroupPosts,
+  getPostByGroup,
 };

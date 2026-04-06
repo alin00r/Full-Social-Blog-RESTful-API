@@ -61,6 +61,22 @@ exports.getFeed = catchAsync(async (req, res, next) => {
   const posts = await postServices.getFeed(req, res, next);
   res.status(200).json({ data: posts });
 });
+
+// @desc  Get all posts in a specific group
+// @route GET /api/v1/groups/:groupId/posts
+// @access Private
+exports.getGroupPosts = catchAsync(async (req, res, next) => {
+  const posts = await postServices.getGroupPosts(req, res, next);
+  res.status(200).json({ results: posts.length, data: posts });
+});
+
+// @desc  Get specific post in a specific group
+// @route GET /api/v1/groups/:groupId/posts/:postId
+// @access Private
+exports.getPostByGroup = catchAsync(async (req, res, next) => {
+  const post = await postServices.getPostByGroup(req, res, next);
+  res.status(200).json({ data: post });
+});
 // Admin controllers
 exports.getAllPosts = factory.getAll(Post, 'Posts');
 exports.createPostByAdmin = factory.createOne(Post);

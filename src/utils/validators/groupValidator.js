@@ -51,7 +51,7 @@ const groupBaseSchema = Joi.object({
     .optional(),
 });
 
-const createGroupSchema = groupBaseSchema.keys({});
+const createGroupSchema = groupBaseSchema;
 
 const updateGroupSchema = groupBaseSchema.keys({
   title: Joi.string().min(3).max(50).optional().messages({

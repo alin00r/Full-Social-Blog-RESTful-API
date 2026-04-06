@@ -41,6 +41,9 @@ const groupSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
+// Middleware to cascade delete posts when a group is deleted
+groupSchema.pre('remove', async function (next) {
+  await this.model('Post').deleteMany({ group: this._id });
+});
 const Group = mongoose.model('Group', groupSchema);
 module.exports = Group;
