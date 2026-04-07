@@ -134,8 +134,8 @@ const getFeed = async (req, res, next) => {
     .populate('author', 'name role')
     .sort({ createdAt: -1 })
     .lean();
-  const adminPosts = posts.filter((post) => post.author.role === 'admin');
-  const otherPosts = posts.filter((post) => post.author.role !== 'admin');
+  const adminPosts = posts.filter((post) => post.author?.role === 'admin');
+  const otherPosts = posts.filter((post) => post.author?.role !== 'admin');
   return [...adminPosts, ...otherPosts];
 };
 

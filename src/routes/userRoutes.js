@@ -81,7 +81,7 @@ router.delete(
 // Admin Routes
 router
   .route('/')
-  .get(restrictTo('super-admin', 'admin', 'manager'), getUsers)
+  .get(restrictTo('super-admin', 'admin'), getUsers)
   .post(
     restrictTo('super-admin', 'admin'),
     uploadUserImage,

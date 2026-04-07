@@ -259,7 +259,7 @@
  *     security:
  *       - bearerAuth: []
  *       - cookieAuth: []
- *     description: "Allowed roles: super-admin, admin, manager."
+ *     description: "Allowed roles: super-admin, admin"
  *     parameters:
  *       - in: query
  *         name: page
