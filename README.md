@@ -43,6 +43,8 @@ Node.js REST API for blogging, user management, group collaboration, and Swagger
 
    Create a `.env` file in the project root and add:
 
+   The app creates a default super-admin account on startup using the values below, so set these to the admin test account you want to use.
+
    ```properties
    PORT=3000
 
@@ -51,8 +53,13 @@ Node.js REST API for blogging, user management, group collaboration, and Swagger
    JWT_SECRET_KEY=your-jwt-secret
    JWT_EXPIRE_TIME=90d
 
-   MAILER_APP_EMAIL=your-email@gmail.com
-   MAILER_APP_PASSWORD=your-email-password
+   EMAIL_FROM=info@BlogAPP.com
+   GMAIL_USERNAME=byour-email@gmail.com
+   GMAIL_PASSWORD=your-email-password
+
+   ADMIN_NAME=your-admin-name
+   ADMIN_EMAIL=admin-email@example.com
+   ADMIN_PASSWORD=@#admin123@#
 
    IMAGEKIT_PUBLIC_KEY=your-imagekit-public-key
    IMAGEKIT_PRIVATE_KEY=your-imagekit-private-key
@@ -64,6 +71,26 @@ Node.js REST API for blogging, user management, group collaboration, and Swagger
    ```bash
    npm run dev
    ```
+
+## Test Admin Account
+
+The application creates a default super-admin user from the values in `.env` when the database connection starts.
+
+- Admin email: `admin@blog.comL`
+- Admin password: `@#admin123@#`
+
+Use the same values you set in `.env` when logging in or testing the admin endpoints.
+
+## Test Endpoints
+
+Use these endpoints to verify the app after setup:
+
+- `POST /api/v1/auth/register` - create a normal user account
+- `POST /api/v1/auth/login` - log in with a user or the admin account from `.env`
+- `GET /api/v1/users/getMe` - check the authenticated user profile
+- `GET /api/v1/posts/feed` - test the public posts feed
+- `GET /api/v1/posts/admin` - test admin access for posts
+- `GET /api/v1/groups` - test group access as an authenticated user or admin
 
 ## Routes
 
