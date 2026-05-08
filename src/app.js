@@ -37,7 +37,7 @@ const app = express();
 
 // Enable other domains to access the app
 const corsOptions = {
-  origin: ['http://localhost:3000', 'https://social-blog-api.vercel.app/'],
+  origin: ['http://localhost:3000','http://localhost:3000','https://social-blog-api.vercel.app/'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
