@@ -36,13 +36,22 @@ dbConnection();
 const app = express();
 
 // Enable other domains to access the app
+const whitelist = [
+  'http://localhost:3000',
+  'http://localhost:4200',
+  'https://social-blog-api.vercel.app',
+  'https://social-blog-app-angular.vercel.app',
+  'https://full-social-blog-res-tful-api.vercel.app',
+];
+
 const corsOptions = {
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:4200',
-    'https://social-blog-api.vercel.app/',
-    'https://social-blog-app-angular.vercel.app/'
-  ],
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    if (whitelist.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new AppError('Not allowed by CORS', 403), false);
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: [
@@ -53,6 +62,7 @@ const corsOptions = {
   ],
   optionsSuccessStatus: 200,
 };
+
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
 
