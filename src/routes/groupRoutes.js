@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   getAllGroups,
   getGroup,
+  getMyGroups,
   deleteGroup,
   updateGroup,
   createGroup,
@@ -38,6 +39,9 @@ router
     createGroup,
   )
   .get(protect, restrictTo('super-admin'), getAllGroups);
+
+// Get groups for authenticated user
+router.get('/my', protect, getMyGroups);
 
 router
   .route('/:groupId')

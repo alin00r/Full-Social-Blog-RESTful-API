@@ -126,6 +126,14 @@ exports.getGroup = catchAsync(async (req, res, next) => {
 
   res.status(200).json({ data: group });
 });
+
+// @desc  Get groups for authenticated user
+// @route GET /api/v1/groups/my
+// @access Private
+exports.getMyGroups = catchAsync(async (req, res, next) => {
+  const groups = await groupServices.getMyGroups(req.user._id);
+  res.status(200).json({ data: groups });
+});
 // @desc  Get all groups
 // @route GET /api/v1/groups
 // @access Private

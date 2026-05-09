@@ -164,11 +164,22 @@ const managePermissions = async (req, res, next) => {
   return group;
 };
 
+// @desc Get groups for a specific user (member, admin or creator)
+// @param userId - id of the user
+const getMyGroups = async (userId) => {
+  const groups = await Group.find({
+    $or: [{ members: userId }, { admins: userId }, { createdBy: userId }],
+  });
+
+  return groups;
+};
+
 module.exports = {
   createGroup,
   addUserToGroup,
   removeUserFromGroup,
   managePermissions,
   addGroupImage,
+  getMyGroups,
   canCreatePostInGroup,
 };
