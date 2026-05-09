@@ -131,7 +131,7 @@ const updateMyPost = async (req, res, next) => {
 // @access Private users
 const getFeed = async (req, res, next) => {
   const posts = await Post.find()
-    .populate('author', 'name role')
+    .populate('author', 'name role profileImg')
     .sort({ createdAt: -1 })
     .lean();
   const adminPosts = posts.filter((post) => post.author?.role === 'admin');
