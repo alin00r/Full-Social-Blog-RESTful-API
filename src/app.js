@@ -40,7 +40,8 @@ const corsOptions = {
   origin: [
     'http://localhost:3000',
     'http://localhost:4200',
-    'https://social-blog-api.vercel.app/'
+    'https://social-blog-api.vercel.app/',
+    'https://social-blog-app-angular.vercel.app/'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
