@@ -67,6 +67,9 @@ const updateLoggedUserSchema = Joi.object({
   profileImg: Joi.string().optional().messages({
     'string.base': 'Profile image must be a string',
   }),
+  profileImgId: Joi.string().optional().messages({
+    'string.base': 'Profile image ID must be a string',
+  }),
 });
 
 const changeLoggedUserPasswordSchema = Joi.object({

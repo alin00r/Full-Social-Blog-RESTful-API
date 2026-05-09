@@ -22,7 +22,6 @@ const updateProfileImage = async (req, res, next) => {
 
   req.body.profileImg = imageResult.url;
   req.body.profileImgId = imageResult.fileId;
-
   next();
 };
 
