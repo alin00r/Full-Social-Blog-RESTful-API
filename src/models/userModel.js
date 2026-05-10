@@ -9,7 +9,8 @@ const userSchema = new mongoose.Schema(
     },
     profileImg: {
       type: String,
-      default: ' ',
+      default:
+        'https://img.magnific.com/free-psd/contact-icon-illustration-isolated_23-2151903337.jpg?semt=ais_hybrid&w=740&q=80',
     },
     profileImgId: {
       type: String,
