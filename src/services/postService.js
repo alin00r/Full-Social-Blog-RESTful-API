@@ -103,26 +103,24 @@ const deleteMyPost = async (req, res, next) => {
 // @access Private users
 const updateMyPost = async (req, res, next) => {
   const post = await Post.findById(req.params.id);
+  if (!post) {
+    return next(new AppError(`No post found with id ${req.params.id}`, 404));
+  }
   if (post.author.toString() !== req.user.id) {
     return next(
       new AppError(`You are not authorized to update this post`, 403),
     );
   }
-  if (!post) {
-    return next(new AppError(`No post found with id ${req.params.id}`, 404));
-  }
   if (req.body.images && req.body.images.length > 0) {
-    const oldPost = await Post.findById(req.params.id);
-    if (oldPost) {
-      await Promise.allSettled(
-        oldPost.images.map((image) => deleteFromImageKit(image.id)),
-      );
-    }
+    await Promise.allSettled(
+      post.images.map((image) => deleteFromImageKit(image.id)),
+    );
   }
   post.title = req.body.title || post.title;
   post.content = req.body.content || post.content;
   post.images = req.body.images || post.images;
   post.group = req.body.group || post.group;
+  await post.save();
   return post;
 };
 
