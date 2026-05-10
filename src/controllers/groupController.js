@@ -46,9 +46,12 @@ exports.managePermissions = catchAsync(async (req, res, next) => {
 });
 
 const canAccessGroup = (group, user) => {
-  user?.role === 'super-admin' ||
-    group.createdBy?.toString() === user?._id?.toString() ||
-    group.members?.some((id) => id.toString() === user?._id?.toString());
+  if (!group || !user) return false;
+  if (user?.role === 'super-admin') return true;
+  if (group.createdBy?.toString() === user?._id?.toString()) return true;
+  if (group.members?.some((id) => id.toString() === user?._id?.toString()))
+    return true;
+  return false;
 };
 const canManageGroup = (group, user) =>
   user?.role === 'super-admin' ||
@@ -124,7 +127,6 @@ exports.getGroup = catchAsync(async (req, res, next) => {
       new AppError(`No group found with id ${req.params.groupId}`, 404),
     );
   }
-
   if (!canAccessGroup(group, req.user)) {
     return next(new AppError('You are not allowed to view this group', 403));
   }
