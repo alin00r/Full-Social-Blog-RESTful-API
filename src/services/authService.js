@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 
 const User = require('../models/userModel');
+const Group = require('../models/groupModel');
 const AppError = require('../utils/appError');
 const sendEmail = require('../middlewares/emailMiddleware');
 
@@ -17,6 +18,33 @@ const registerUser = async ({ name, email, password, passwordConfirm }) => {
   const user = new User({ name, email, password });
   await user.save();
   await new sendEmail(user).sendWelcome();
+  // Auto-add new user to the default group if it exists
+  try {
+    const DEFAULT_GROUP_ID = process.env.DEFAULT_GROUP_ID;
+    const group = await Group.findById(DEFAULT_GROUP_ID);
+    if (group) {
+      const userIdStr = user._id.toString();
+      const isMember = group.members?.some((id) => id.toString() === userIdStr);
+      if (!isMember) {
+        group.members = group.members || [];
+        group.members.push(user._id);
+        // ensure basic read permission for new member
+        group.memberPermissions = group.memberPermissions || [];
+        const existing = group.memberPermissions.find(
+          (item) => item.user.toString() === userIdStr,
+        );
+        if (!existing)
+          group.memberPermissions.push({
+            user: user._id,
+            permissions: ['read', 'write'],
+          });
+        await group.save();
+      }
+    }
+  } catch (err) {
+    // don't block registration on group update failures
+    console.error('Failed to add new user to default group:', err);
+  }
   return user;
 };
 
