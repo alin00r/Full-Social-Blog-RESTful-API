@@ -45,7 +45,12 @@ exports.managePermissions = catchAsync(async (req, res, next) => {
   res.status(200).json({ data: group });
 });
 
-const canAccessGroup = (group, user) =>
+const canAccessGroup = (group, user) => {
+  user?.role === 'super-admin' ||
+    group.createdBy?.toString() === user?._id?.toString() ||
+    group.members?.some((id) => id.toString() === user?._id?.toString());
+};
+const canManageGroup = (group, user) =>
   user?.role === 'super-admin' ||
   group.createdBy?.toString() === user?._id?.toString();
 
